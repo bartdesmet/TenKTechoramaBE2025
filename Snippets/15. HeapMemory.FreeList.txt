@@ -1,0 +1,56 @@
+    public class HeapMemory
+    {
+        // ...
+
+        public HeapMemory()
+        {
+            Construct(global::Type.Free, _data);
+        }
+
+        // ...
+
+        private bool TryAlloc(Memory<byte> region, int size, out Memory<byte> res)
+        {
+            foreach (var (offset, obj) in Walk())
+            {
+                if (Type(obj) == global::Type.Free)
+                {
+                    if (Size(obj) == size)
+                    {
+                        res = obj;
+                        return true;
+                    }
+
+                    if (Size(obj) > size + HeaderSize)
+                    {
+                        res = obj[..size];
+                        Construct(global::Type.Free, obj[size..]);
+                        return true;
+                    }
+                }
+            }
+
+            res = null;
+            return false;
+        }
+
+        // ...
+
+        private IEnumerable<(int offset, Memory<byte> obj)> Walk() => Walk(_data);
+
+        private IEnumerable<(int offset, Memory<byte> obj)> Walk(Memory<byte> region)
+        {
+            Memory<byte> current = region;
+            int offset = 0;
+
+            while (current.Length > 0)
+            {
+                int size = Size(current);
+                yield return (offset, current[..size]);
+                offset += size;
+                current = current[size..];
+            }
+        }
+
+        private readonly byte[] _data = new byte[16 * 1024];
+    }

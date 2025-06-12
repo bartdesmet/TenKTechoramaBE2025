@@ -1,0 +1,131 @@
+    public record Add<T> : Instruction
+        where T : IAdditionOperators<T, T, T>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs + rhs);
+            return 1;
+        }
+    }
+
+    public record Subtract<T> : Instruction
+        where T : ISubtractionOperators<T, T, T>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs - rhs);
+            return 1;
+        }
+    }
+
+    public record Multiply<T> : Instruction
+        where T : IMultiplyOperators<T, T, T>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs * rhs);
+            return 1;
+        }
+    }
+
+    public record Divide<T> : Instruction
+        where T : IDivisionOperators<T, T, T>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs / rhs);
+            return 1;
+        }
+    }
+
+    public record Remainder<T> : Instruction
+        where T : IModulusOperators<T, T, T>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs % rhs);
+            return 1;
+        }
+    }
+
+    public record Equal<T> : Instruction
+        where T : IEqualityOperators<T, T, bool>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs == rhs);
+            return 1;
+        }
+    }
+
+    public record NotEqual<T> : Instruction
+        where T : IEqualityOperators<T, T, bool>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs != rhs);
+            return 1;
+        }
+    }
+
+    public record LessThan<T> : Instruction
+        where T : IComparisonOperators<T, T, bool>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs < rhs);
+            return 1;
+        }
+    }
+
+    public record GreaterThan<T> : Instruction
+        where T : IComparisonOperators<T, T, bool>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs > rhs);
+            return 1;
+        }
+    }
+
+    public record LessThanOrEqual<T> : Instruction
+        where T : IComparisonOperators<T, T, bool>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs <= rhs);
+            return 1;
+        }
+    }
+
+    public record GreaterThanOrEqual<T> : Instruction
+        where T : IComparisonOperators<T, T, bool>
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var rhs = runtime.Stack.PopVal<T>();
+            var lhs = runtime.Stack.PopVal<T>();
+            runtime.Stack.PushVal(lhs >= rhs);
+            return 1;
+        }
+    }

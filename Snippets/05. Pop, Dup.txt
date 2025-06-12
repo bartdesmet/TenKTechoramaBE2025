@@ -1,0 +1,19 @@
+    public record Pop : Instruction
+    {
+        public override int Execute(Runtime runtime)
+        {
+            runtime.Stack.Pop();
+            return 1;
+        }
+    }
+
+    public record Dup : Instruction
+    {
+        public override int Execute(Runtime runtime)
+        {
+            var slot = runtime.Stack.Pop();
+            runtime.Stack.Push(slot);
+            runtime.Stack.Push(slot);
+            return 1;
+        }
+    }

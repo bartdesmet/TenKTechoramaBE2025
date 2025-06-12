@@ -1,0 +1,148 @@
+Runtime.Run([
+    // 0000 ldstr "Primes: "
+    new Instruction.LoadString { Value = "Primes: "u8.ToArray() },
+
+    // 0001 stloc.0
+    new Instruction.StoreLocal { Index = 0 },
+
+    // 0002 ldc.i4 2
+    new Instruction.LoadVal<int> { Value = 2 },
+
+    // 0003 stloc.1
+    new Instruction.StoreLocal { Index = 1 },
+
+    // 0004 ldloc.1
+    new Instruction.LoadLocal { Index = 1 },
+
+    // 0005 ldc.i4 100
+    new Instruction.LoadVal<int> { Value = 100 },
+
+    // 0006 cge
+    new Instruction.GreaterThanOrEqual<int>(),
+
+    // 0007 brtrue 0048
+    new Instruction.BranchTrue { Offset = 46 - 7 },
+
+    // 0008 ldc.i4 1
+    new Instruction.LoadVal<bool> { Value = true },
+
+    // 0009 stloc.2
+    new Instruction.StoreLocal { Index = 2 },
+
+    // 0010 ldc.i4 2
+    new Instruction.LoadVal<int> { Value = 2 },
+
+    // 0011 stloc.3
+    new Instruction.StoreLocal { Index = 3 },
+
+    // 0012 ldloc.3
+    new Instruction.LoadLocal { Index = 3 },
+
+    // 0013 ldloc.3
+    new Instruction.LoadLocal { Index = 3 },
+
+    // 0014 mul
+    new Instruction.Multiply<int>(),
+
+    // 0015 ldloc.1
+    new Instruction.LoadLocal { Index = 1 },
+
+    // 0016 cgt
+    new Instruction.GreaterThan<int>(),
+
+    // 0017 brtrue 0032
+    new Instruction.BranchTrue { Offset = 32 - 17 },
+
+    // 0018 ldloc.1
+    new Instruction.LoadLocal { Index = 1 },
+
+    // 0019 ldloc.3
+    new Instruction.LoadLocal { Index = 3 },
+
+    // 0020 rem
+    new Instruction.Remainder<int>(),
+
+    // 0021 ldc.i4 0
+    new Instruction.LoadVal<int> { Value = 0 },
+
+    // 0022 ceq
+    new Instruction.Equal<int>(),
+
+    // 0023 brfalse 0027
+    new Instruction.BranchFalse { Offset = 27 - 23 },
+
+    // 0024 ldc.i4 0
+    new Instruction.LoadVal<bool> { Value = false },
+
+    // 0025 stloc.2
+    new Instruction.StoreLocal { Index = 2 },
+
+    // 0026 br 0032
+    new Instruction.Branch { Offset = 32 - 26 },
+
+    // 0027 ldloc.3
+    new Instruction.LoadLocal { Index = 3 },
+
+    // 0028 ldc.i4 1
+    new Instruction.LoadVal<int> { Value = 1 },
+
+    // 0029 add
+    new Instruction.Add<int>(),
+
+    // 0030 stloc.3
+    new Instruction.StoreLocal { Index = 3 },
+
+    // 0031 br 0012
+    new Instruction.Branch { Offset = 12 - 31 },
+
+    // 0032 ldloc.2
+    new Instruction.LoadLocal { Index = 2 },
+
+    // 0033 brfalse 0043
+    new Instruction.BranchFalse { Offset = 41 - 33 },
+
+    // 0034 ldloc.0
+    new Instruction.LoadLocal { Index = 0 },
+
+    // 0035 ldloc.1
+    new Instruction.LoadLocal { Index = 1 },
+
+    // 0036 call IntToString
+    new Instruction.Call { Name = "IntToString" },
+
+    // 0037 ldstr ", "
+    new Instruction.LoadString { Value = ", "u8.ToArray() },
+
+    // 0038 call Concat
+    new Instruction.Call { Name = "Concat" },
+
+    // 0039 call Concat
+    new Instruction.Call { Name = "Concat" },
+
+    // 0040 stloc.0
+    new Instruction.StoreLocal { Index = 0 },
+
+    // 0041 ldloc.1
+    new Instruction.LoadLocal { Index = 1 },
+
+    // 0042 ldc.i4 1
+    new Instruction.LoadVal<int> { Value = 1 },
+
+    // 0043 add
+    new Instruction.Add<int>(),
+
+    // 0044 stloc.1
+    new Instruction.StoreLocal { Index = 1 },
+
+    // 0045 br 0004
+    new Instruction.Branch { Offset = 4 - 45 },
+
+    // 0046 ldloc.0
+    new Instruction.LoadLocal { Index = 0 },
+
+    // 0047 call Println
+    new Instruction.Call { Name = "Println" },
+
+    // 0048 ret
+    new Instruction.Return(),
+]);

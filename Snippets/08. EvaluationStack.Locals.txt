@@ -1,0 +1,9 @@
+    public class EvaluationStack
+    {
+        // ...
+
+        public Slot LoadLocal(byte index) => _locals[index];
+        public void StoreLocal(byte index, Slot value) => _locals[index] = value;
+
+        private Slot[] _locals = new Slot[256];
+    }

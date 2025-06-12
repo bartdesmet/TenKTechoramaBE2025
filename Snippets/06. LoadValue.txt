@@ -1,0 +1,10 @@
+    public record LoadVal<T> : Instruction
+    {
+        public required T Value { get; init; }
+
+        public override int Execute(Runtime runtime)
+        {
+            runtime.Stack.PushVal(Value);
+            return 1;
+        }
+    }

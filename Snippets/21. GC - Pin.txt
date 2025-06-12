@@ -1,0 +1,46 @@
+    public record Call : Instruction
+    {
+        // ...
+
+            void Concat()
+            {
+                // ...
+
+                HeapMemory.Flags(lhs) |= HeapMemory.ObjFlags.Pinned;
+                HeapMemory.Flags(rhs) |= HeapMemory.ObjFlags.Pinned;
+
+                var res = runtime.Heap.New(Type.String, checked((ushort)size));
+
+                HeapMemory.Flags(lhs) &= ~HeapMemory.ObjFlags.Pinned;
+                HeapMemory.Flags(rhs) &= ~HeapMemory.ObjFlags.Pinned;
+
+                // ...
+            }
+    }
+
+    // ...
+
+    public class HeapMemory
+    {
+        // ...
+
+        private void Collect()
+        {
+            // ...
+
+            void Sweep()
+            {
+                foreach (var (offset, obj) in Walk())
+                {
+                    if (Flags(obj).HasFlag(ObjFlags.Marked))
+                    {
+                        Flags(obj) &= ~ObjFlags.Marked;
+                    }
+                    else if (!Flags(obj).HasFlag(ObjFlags.Pinned))
+                    {
+                        Construct(global::Type.Free, obj);
+                    }
+                }
+
+                CoalesceFreeBlocks();
+            }

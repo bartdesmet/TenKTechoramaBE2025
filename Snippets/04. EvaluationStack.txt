@@ -1,0 +1,17 @@
+﻿    public record Slot;
+
+    public record ValueSlot<T>(T Value) : Slot;
+    public record RefSlot(Memory<byte> Reference) : Slot;
+
+    public class EvaluationStack
+    {
+        public void PushVal<T>(T value) => Push(new ValueSlot<T>(value));
+        public void PushRef(Memory<byte> obj) => Push(new RefSlot(obj));
+        public void Push(Slot slot) => _stack.Push(slot);
+
+        public T PopVal<T>() => ((ValueSlot<T>)Pop()).Value;
+        public Memory<byte> PopRef() => ((RefSlot)Pop()).Reference;
+        public Slot Pop() => _stack.Pop();
+
+        private Stack<Slot> _stack = new();
+    }

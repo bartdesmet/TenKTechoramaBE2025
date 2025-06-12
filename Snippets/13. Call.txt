@@ -1,0 +1,70 @@
+    public record Call : Instruction
+    {
+        public required string Name { get; init; }
+
+        public override int Execute(Runtime runtime)
+        {
+            switch (Name)
+            {
+                case "IntToString":
+                    IntToString();
+                    break;
+                case "Concat":
+                    Concat();
+                    break;
+                case "Println":
+                    Println();
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            return 1;
+
+            void IntToString()
+            {
+                int value = runtime.Stack.PopVal<int>();
+                var str = value.ToString();
+                var res = runtime.Heap.New(Type.String, checked((ushort)str.Length));
+                var data = HeapMemory.Data(res);
+                for (int i = 0; i < str.Length; i++)
+                {
+                    data[i] = (byte)str[i];
+                }
+                runtime.Stack.PushRef(res);
+            }
+
+            void Concat()
+            {
+                var rhs = runtime.Stack.PopRef();
+                var lhs = runtime.Stack.PopRef();
+
+                var rhs_data = HeapMemory.Data(rhs);
+                var lhs_data = HeapMemory.Data(lhs);
+
+                var size = lhs_data.Length + rhs_data.Length;
+
+                // TODO: Keep references safe!
+
+                var res = runtime.Heap.New(Type.String, checked((ushort)size));
+
+                var data = HeapMemory.Data(res);
+
+                lhs_data.CopyTo(data);
+                rhs_data.CopyTo(data.Slice(lhs_data.Length));
+
+                runtime.Stack.PushRef(res);
+            }
+
+            void Println()
+            {
+                var res = runtime.Stack.PopRef();
+                var data = HeapMemory.Data(res);
+                foreach (char b in data)
+                {
+                    Console.Write(b);
+                }
+                Console.WriteLine();
+            }
+        }
+    }

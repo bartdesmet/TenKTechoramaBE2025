@@ -1,0 +1,57 @@
+            void Compact()
+            {
+                if (Split(out var free, out var toCompact))
+                {
+                    bool hasCompacted = false;
+
+                    foreach ((int offset, Memory<byte> obj) in Walk(toCompact))
+                    {
+                        if (Type(obj) != global::Type.Free && !Flags(obj).HasFlag(ObjFlags.Pinned))
+                        {
+                            if (TryAlloc(free, Size(obj), out var res))
+                            {
+                                obj.CopyTo(res);
+                                PatchRefs(obj, res);
+                                Construct(global::Type.Free, obj);
+                                hasCompacted = true;
+                            }
+                        }
+                    }
+
+                    if (hasCompacted)
+                    {
+                        CoalesceFreeBlocks();
+                    }
+                }
+
+                bool Split(out Memory<byte> free, out Memory<byte> toCompact)
+                {
+                    foreach ((int offset, Memory<byte> obj) in Walk())
+                    {
+                        if (Type(obj) == global::Type.Free)
+                        {
+                            free = obj;
+                            toCompact = new Memory<byte>(_data)[(offset + Size(obj))..];
+                            return true;
+                        }
+                    }
+
+                    free = null;
+                    toCompact = null;
+                    return false;
+                }
+
+                void PatchRefs(Memory<byte> from, Memory<byte> to)
+                {
+                    foreach (var slot in _runtime.Stack.Walk())
+                    {
+                        if (slot is RefSlot refSlot)
+                        {
+                            if (refSlot.Reference.Equals(from))
+                            {
+                                refSlot.Reference = to;
+                            }
+                        }
+                    }
+                }
+            }

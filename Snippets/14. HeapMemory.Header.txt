@@ -1,0 +1,43 @@
+    public class HeapMemory
+    {
+        private const int HeaderSize = 4;
+
+        public Memory<byte> New(Type type, ushort size)
+        {
+            if (TryNew(type, size, out var res))
+            {
+                return res;
+            }
+
+            throw new OutOfMemoryException();
+        }
+
+        public static ref Type Type(Memory<byte> memory) => ref MemoryMarshal.Cast<byte, Type>(memory.Span)[0];
+
+        public static ref ushort Size(Memory<byte> memory) => ref MemoryMarshal.Cast<byte, ushort>(memory.Span[2..])[0];
+
+        public static Span<byte> Data(Memory<byte> memory) => memory.Span[HeaderSize..];
+
+        private bool TryNew(Type type, ushort bytes, out Memory<byte> res)
+        {
+            if (!TryAlloc(bytes + HeaderSize, out res))
+            {
+                return false;
+            }
+
+            Construct(type, res);
+            return true;
+        }
+
+        private bool TryAlloc(int size, out Memory<byte> res)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Construct(Type type, Memory<byte> obj)
+        {
+            Type(obj) = type;
+            Size(obj) = checked((ushort)obj.Length);
+            Data(obj).Clear();
+        }
+    }

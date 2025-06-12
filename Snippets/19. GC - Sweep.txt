@@ -1,0 +1,69 @@
+    public class HeapMemory
+    {
+        // ...
+
+        // ...
+
+        private void Collect()
+        {
+            Mark();
+            Sweep();
+            Compact();
+
+            // ...
+
+            void Sweep()
+            {
+                foreach (var (offset, obj) in Walk())
+                {
+                    if (Flags(obj).HasFlag(ObjFlags.Marked))
+                    {
+                        Flags(obj) &= ~ObjFlags.Marked;
+                    }
+                    else
+                    {
+                        Construct(global::Type.Free, obj);
+                    }
+                }
+
+                CoalesceFreeBlocks();
+            }
+        }
+
+        private void CoalesceFreeBlocks()
+        {
+            Memory<byte>? firstFree = null;
+            int? firstFreeOffset = 0;
+
+            int freeSize = 0;
+
+            foreach ((int offset, Memory<byte> obj) in Walk())
+            {
+                if (Type(obj) == global::Type.Free)
+                {
+                    firstFree ??= obj;
+                    firstFreeOffset ??= offset;
+                    freeSize += Size(obj);
+                }
+                else
+                {
+                    Coalesce();
+
+                    firstFree = null;
+                    firstFreeOffset = null;
+                    freeSize = 0;
+                }
+            }
+
+            Coalesce();
+
+            void Coalesce()
+            {
+                if (firstFree != null && firstFreeOffset != null)
+                {
+                    var free = new Memory<byte>(_data, firstFreeOffset.Value, freeSize);
+                    Construct(global::Type.Free, free);
+                }
+            }
+        }
+    }

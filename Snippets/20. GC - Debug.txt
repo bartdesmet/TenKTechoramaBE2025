@@ -1,0 +1,30 @@
+        public Memory<byte> New(Type type, ushort size)
+        {
+            if (TryNew(type, size, out var res))
+            {
+                return res;
+            }
+
+            Console.WriteLine("+++ Collect +++");
+            Print();
+            Collect();
+            Console.WriteLine("--- Collect ---");
+            Print();
+
+            if (TryNew(type, size, out res))
+            {
+                return res;
+            }
+
+            throw new OutOfMemoryException();
+        }
+
+        // ...
+
+        void Print()
+        {
+            foreach (var (offset, obj) in Walk())
+            {
+                Console.WriteLine($"{offset} - {Type(obj)} {Size(obj)} bytes");
+            }
+        }

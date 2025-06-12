@@ -1,0 +1,14 @@
+abstract record Instruction
+{
+    public abstract int Execute(Runtime runtime);
+
+    public record Nop : Instruction
+    {
+        public override int Execute(Runtime runtime) => 1;
+    }
+
+    public record Return : Instruction
+    {
+        public override int Execute(Runtime runtime) => throw new NotSupportedException();
+    }
+}

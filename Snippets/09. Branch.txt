@@ -1,0 +1,39 @@
+    public record Branch : Instruction
+    {
+        public required int Offset { get; init; }
+
+        public override int Execute(Runtime runtime)
+        {
+            return Offset;
+        }
+    }
+
+    public record BranchTrue : Instruction
+    {
+        public required int Offset { get; init; }
+
+        public override int Execute(Runtime runtime)
+        {
+            if (runtime.Stack.PopVal<bool>())
+            {
+                return Offset;
+            }
+
+            return 1;
+        }
+    }
+
+    public record BranchFalse : Instruction
+    {
+        public required int Offset { get; init; }
+
+        public override int Execute(Runtime runtime)
+        {
+            if (!runtime.Stack.PopVal<bool>())
+            {
+                return Offset;
+            }
+
+            return 1;
+        }
+    }

@@ -1,0 +1,18 @@
+    public static void Run(IReadOnlyList<Instruction> program)
+    {
+        var runtime = new Runtime();
+
+        int pc = 0;
+
+        while (pc < program.Count)
+        {
+            var instruction = program[pc];
+
+            if (instruction is Instruction.Return)
+            {
+                break;
+            }
+
+            pc += instruction.Execute(runtime);
+        }
+    }

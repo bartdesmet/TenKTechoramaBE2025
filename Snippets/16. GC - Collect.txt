@@ -1,0 +1,40 @@
+        public Memory<byte> New(Type type, ushort size)
+        {
+            if (TryNew(type, size, out var res))
+            {
+                return res;
+            }
+
+            Collect();
+
+            if (TryNew(type, size, out res))
+            {
+                return res;
+            }
+
+            throw new OutOfMemoryException();
+        }
+
+        // ...
+
+        private void Collect()
+        {
+            Mark();
+            Sweep();
+            Compact();
+
+            void Mark()
+            {
+                throw new NotImplementedException();
+            }
+
+            void Sweep()
+            {
+            }
+
+            void Compact()
+            {
+            }
+        }
+
+        private readonly byte[] _data = new byte[1024];

@@ -1,0 +1,22 @@
+    public record LoadLocal : Instruction
+    {
+        public required byte Index { get; init; }
+
+        public override int Execute(Runtime runtime)
+        {
+            runtime.Stack.Push(runtime.Stack.LoadLocal(Index));
+            return 1;
+        }
+    }
+
+    public record StoreLocal : Instruction
+    {
+        public required byte Index { get; init; }
+
+        public override int Execute(Runtime runtime)
+        {
+            var value = runtime.Stack.Pop();
+            runtime.Stack.StoreLocal(Index, value);
+            return 1;
+        }
+    }

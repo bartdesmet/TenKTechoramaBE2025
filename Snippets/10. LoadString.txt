@@ -1,0 +1,13 @@
+    public record LoadString : Instruction
+    {
+        public required byte[] Value { get; init; }
+
+        public override int Execute(Runtime runtime)
+        {
+            Memory<byte> value = runtime.Heap.New(Type.String, checked((ushort)Value.Length));
+            Span<byte> data = HeapMemory.Data(value);
+            Value.CopyTo(data);
+            runtime.Stack.PushRef(value);
+            return 1;
+        }
+    }

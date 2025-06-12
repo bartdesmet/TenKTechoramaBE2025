@@ -1,0 +1,18 @@
+class Runtime
+{
+    public EvaluationStack Stack { get; } = new();
+    public HeapMemory Heap { get; } = new();
+
+    public class EvaluationStack
+    {
+    }
+
+    public class HeapMemory
+    {
+    }
+
+    public static void Run(IReadOnlyList<Instruction> program)
+    {
+        throw new NotImplementedException();
+    }
+}

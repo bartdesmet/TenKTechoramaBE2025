@@ -1,0 +1,6 @@
+    public class HeapMemory
+    {
+        public Memory<byte> New(Type type, ushort size) => new byte[size];
+
+        public static Span<byte> Data(Memory<byte> memory) => memory.Span;
+    }

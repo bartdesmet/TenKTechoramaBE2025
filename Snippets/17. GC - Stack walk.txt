@@ -1,0 +1,16 @@
+    public class EvaluationStack
+    {
+        // ...
+
+        public IEnumerable<Slot> Walk()
+        {
+            foreach (var slot in _locals)
+                if (slot != null)
+                    yield return slot;
+
+            foreach (var slot in _stack)
+                yield return slot;
+        }
+
+        // ...
+    }

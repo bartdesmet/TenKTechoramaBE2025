@@ -1,0 +1,59 @@
+class Runtime
+{
+    public Runtime()
+    {
+        Heap = new(this);
+    }
+
+    public EvaluationStack Stack { get; } = new();
+    public HeapMemory Heap { get; }
+
+    // ...
+
+    public class HeapMemory
+    {
+        // ...
+
+        [Flags]
+        public enum ObjFlags : byte
+        {
+            None   = 0b0000,
+            Marked = 0b0001,
+            Pinned = 0b0010,
+        }
+
+        public HeapMemory(Runtime runtime)
+        {
+            _runtime = runtime;
+            Construct(global::Type.Free, _data);
+        }
+
+        // ...
+
+        public static ref ObjFlags Flags(Memory<byte> memory) => ref MemoryMarshal.Cast<byte, ObjFlags>(memory.Span)[1];
+
+        // ...
+
+        private void Collect()
+        {
+            Mark();
+            Sweep();
+            Compact();
+
+            void Mark()
+            {
+                foreach (var obj in _runtime.Stack.Walk())
+                {
+                    if (obj is RefSlot refSlot)
+                    {
+                        Flags(refSlot.Reference) |= ObjFlags.Marked;
+                    }
+                }
+            }
+
+            // ...
+        }
+
+        private Runtime _runtime;
+    }
+}
